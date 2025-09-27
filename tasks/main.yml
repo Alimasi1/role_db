@@ -1,7 +1,4 @@
 ---
-# tasks file for roles/role_db
-
----
 - name: Installeer Python3 en PyMySQL library (nodig voor Ansible MySQL module)
   ansible.builtin.apt:
     name:
@@ -22,8 +19,12 @@
     state: started
     enabled: true
 
-- name: Maak database {{ db_name }}
+- name: Maak database aan
   community.mysql.mysql_db:
-    name: "{{ db_name }}"
+    name: myapp
     state: present
-
+    login_user: root
+    login_password: ""                # <-- leeg laten!
+    login_unix_socket: /run/mysqld/mysqld.sock
+    check_implicit_admin: true        # <-- belangrijk voor unix_socket auth
+  become: true
